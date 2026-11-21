@@ -2,6 +2,10 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout') {
@@ -16,9 +20,8 @@ pipeline {
                 echo 'Deploying Zoom application'
 
                 sh '''
-                  rm -rf /var/www/html/*
-
-                  cp -r* /var/www/html/
+                    rm -rf /var/www/html/*
+                    cp -r * /var/www/html/
                 '''
             }
         }
