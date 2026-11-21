@@ -16,8 +16,9 @@ pipeline {
                 echo 'Deploying Zoom application'
 
                 sh '''
-                    rm -rf /var/www/html/index.html
-                    mv b53_zoomwebapp/index.html /var/www/html/
+                 rm -rf /var/www/html/index.html
+
+                 cp -r * /var/www/html/
                 '''
             }
         }
