@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom Meeting App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1c1c1c;
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            background: #242424;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #2d8cff;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .meeting-info {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        /* Main meeting area */
+        .meeting-container {
+            display: flex;
+            height: calc(100vh - 140px);
+        }
+
+        .video-section {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            height: 100%;
+        }
+
+        .video-box {
+            background: #333;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .participant-name {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #292929;
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 20px;
+        }
+
+        .participant {
+            background: #3b3b3b;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        /* Bottom toolbar */
+        .toolbar {
+            height: 80px;
+            background: #242424;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .tool {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .tool button {
+            background: #333;
+            border: none;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .tool button:hover {
+            background: #555;
+        }
+
+        .leave-btn {
+            background: #e53935 !important;
+        }
+
+        .status {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            .meeting-container {
+                flex-direction: column;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .toolbar {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .tool button {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">Zoom</div>
+        <div class="meeting-info">Meeting ID: 123-456-789</div>
+    </div>
+
+    <!-- Meeting Content -->
+    <div class="meeting-container">
+
+        <!-- Video Section -->
+        <div class="video-section">
+            <div class="video-grid">
+
+                <div class="video-box">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e"
+                         alt="Participant">
+                    <div class="participant-name">John (Host)</div>
+                </div>
+
+                <div class="video-box">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+                         alt="Participant">
+                    <div class="participant-name">Sarah</div>
+                </div>
+
+                <div class="video-box">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d"
+                         alt="Participant">
+                    <div class="participant-name">Mike</div>
+                </div>
+
+                <div class="video-box">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9"
+                         alt="Participant">
+                    <div class="participant-name">Emily</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Participant Sidebar -->
+        <div class="sidebar">
+            <h3>Participants (4)</h3>
+
+            <div class="participant">👤 John (Host)</div>
+            <div class="participant">👤 Sarah</div>
+            <div class="participant">👤 Mike</div>
+            <div class="participant">👤 Emily</div>
+        </div>
+
+    </div>
+
+    <!-- Meeting Toolbar -->
+    <div class="toolbar">
+
+        <div class="tool">
+            <button onclick="toggleMic()" id="micBtn">🎤</button>
+            <div class="status" id="micStatus">Mic On</div>
+        </div>
+
+        <div class="tool">
+            <button onclick="toggleCamera()" id="cameraBtn">📷</button>
+            <div class="status" id="cameraStatus">Camera On</div>
+        </div>
+
+        <div class="tool">
+            <button onclick="shareScreen()">🖥</button>
+            <div class="status">Share Screen</div>
+        </div>
+
+        <div class="tool">
+            <button onclick="showChat()">💬</button>
+            <div class="status">Chat</div>
+        </div>
+
+        <div class="tool">
+            <button onclick="showParticipants()">👥</button>
+            <div class="status">Participants</div>
+        </div>
+
+        <div class="tool">
+            <button class="leave-btn" onclick="leaveMeeting()">❌</button>
+            <div class="status">Leave</div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+
+        let micOn = true;
+        let cameraOn = true;
+
+        function toggleMic() {
+            micOn = !micOn;
+
+            document.getElementById("micBtn").innerText =
+                micOn ? "🎤" : "🔇";
+
+            document.getElementById("micStatus").innerText =
+                micOn ? "Mic On" : "Mic Off";
+        }
+
+        function toggleCamera() {
+            cameraOn = !cameraOn;
+
+            document.getElementById("cameraBtn").innerText =
+                cameraOn ? "📷" : "🚫";
+
+            document.getElementById("cameraStatus").innerText =
+                cameraOn ? "Camera On" : "Camera Off";
+        }
+
+        function shareScreen() {
+            alert("Screen sharing feature is a demo.");
+        }
+
+        function showChat() {
+            alert("Chat feature is a demo.");
+        }
+
+        function showParticipants() {
+            alert("Participants feature is a demo.");
+        }
+
+        function leaveMeeting() {
+            alert("You have left the meeting.");
+        }
+
+    </script>
+
+</body>
+</html>
