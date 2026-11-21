@@ -16,7 +16,7 @@ pipeline {
                 echo 'Deploying Zoom application'
 
                 sh '''
-             sudo rm -rf /var/www/html/index.html
+             sudo rm -rf /var/www/html/*
 
                  sudo cp -r * /var/www/html/
                 '''
