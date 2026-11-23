@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        TARGET_IP = '16.171.208.10'
+    }
+
+    stages {
+
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/USERNAME/jenkins-html-deployment.git'
+            }
+        }
+
+        stage('Deploy HTML') {
+            steps {
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'target-ec2-ssh',
+                        keyFileVariable: 'SSH_KEY',
+                        usernameVariable: 'SSH_USER'
+                    )
+                ]) {
+                    sh '''
+                        scp -i "$SSH_KEY" \
+                        -o StrictHostKeyChecking=accept-new \
+                        index.html \
+                        $SSH_USER@$TARGET_IP:/tmp/index.html
+
+                        ssh -i "$SSH_KEY" \
+                        -o StrictHostKeyChecking=accept-new \
+                        $SSH_USER@$TARGET_IP \
+                        "install -m 644 /tmp/index.html /var/www/html/index.html"
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    curl -f http://$TARGET_IP
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment Successful!'
+        }
+
+        failure {
+            echo 'Deployment Failed!'
+        }
+    }
+}
